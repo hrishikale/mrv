@@ -3,7 +3,24 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Amplify } from 'aws-amplify';
 
+Amplify.configure({
+  Auth: {
+    Cognito: {
+      userPoolId: "ap-south-1_5ZLbZMx44",
+      userPoolClientId: "1ur2132dv60bki4ds7jffg57oi",
+    }
+  },
+  API: {
+    REST: {
+      DashboardAPI: {
+        endpoint: "https://6qxm2a6sa2.execute-api.ap-south-1.amazonaws.com/dev",
+        region: "ap-south-1"
+      }
+    }
+  },
+});
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

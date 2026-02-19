@@ -10,7 +10,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="https://6qxm2a6sa2.execute-api.ap-south-1.amazonaws.com/dev" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         
         {/* Protected Routes Wrapper (Dashboard Layout) */}
         <Route path="/dashboard" element={<DashboardLayout />}>

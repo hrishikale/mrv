@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import { Auth } from 'aws-amplify'; // Uncomment when AWS is configured
+import { signIn } from 'aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
 
@@ -14,15 +14,17 @@ const Login: React.FC = () => {
         setError('');
 
         try {
-            // Mock authentication for initial UI development
-            // await Auth.signIn(email, password);
-            console.log('Logging in with:', email, password);
-             if (email === 'admin@admin.com' && password === 'admin') {
-                // Mocking successful login for the default admin user
-                 localStorage.setItem('user_role', 'super_admin'); // Store role for RBAC logic demo
+            const { isSignedIn, nextStep } = await signIn({ username: email, password });
+            console.log('Login result:', isSignedIn, nextStep);
+            
+            if (isSignedIn) {
+                 // For RBAC, you would typically fetch user attributes or groups here
+                 // For now, we'll assume if they can login, they are at least a user
+                 // In a real app, query 'fetchAuthSession' to get tokens and claims
+                 localStorage.setItem('user_role', 'super_admin'); // Placeholder/Fallback
                  navigate('/dashboard');
             } else {
-                 throw new Error('Invalid credentials');
+                 setError('Login incomplete. detailed flow not implemented in this demo.');
             }
         } catch (err: any) {
             setError(err.message || 'Failed to login');

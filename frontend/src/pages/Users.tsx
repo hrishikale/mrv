@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Button, Card, Badge, Modal, Form, Row, Col } from 'react-bootstrap';
+import { get, post } from 'aws-amplify/api';
 
 interface User {
     id: string;
@@ -11,11 +12,34 @@ interface User {
 }
 
 const Users: React.FC = () => {
-    // Mock data for initial UI
-    const [users, setUsers] = useState<User[]>([
-        { id: '1', name: 'Admin User', email: 'admin@admin.com', phone: '1234567890', role: 'Super Admin', access: 'EDIT' },
-        { id: '2', name: 'John Doe', email: 'john@example.com', phone: '9876543210', role: 'Viewer', access: 'VIEW' },
-    ]);
+    const [users, setUsers] = useState<User[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    // Fetch users on load
+    React.useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        try {
+            setLoading(true);
+            const restOperation = get({ 
+                apiName: 'DashboardAPI',
+                path: '/users' 
+            });
+            const { body } = await restOperation.response;
+            const data = await body.json();
+            setUsers(data as unknown as User[]);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            // Fallback mock data if API fails (for demo continuity if config is wrong)
+            setUsers([
+                { id: '1', name: 'Admin User (Mock)', email: 'admin@admin.com', phone: '1234567890', role: 'Super Admin', access: 'EDIT' }
+            ]);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const [showAddModal, setShowAddModal] = useState(false);
     const [newUser, setNewUser] = useState({ name: '', email: '', phone: '', role: 'User', access: 'VIEW' });
@@ -28,13 +52,26 @@ const Users: React.FC = () => {
         setNewUser(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleAddUser = (e: React.FormEvent) => {
+    const handleAddUser = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Here we would call the actual API
-        const user: User = { ...newUser, id: Date.now().toString() };
-        setUsers([...users, user]);
-        handleClose();
-        console.log("Added user:", user);
+        try {
+            const restOperation = post({
+                apiName: 'DashboardAPI',
+                path: '/users',
+                options: {
+                    body: newUser
+                }
+            });
+            const { body } = await restOperation.response;
+            await body.json(); // Wait for response
+            
+            // Refresh list
+            fetchUsers();
+            handleClose();
+        } catch (error) {
+             console.error('Error adding user:', error);
+             alert('Failed to add user');
+        }
     };
 
     return (

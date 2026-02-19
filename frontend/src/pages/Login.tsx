@@ -37,7 +37,15 @@ const Login: React.FC = () => {
         e.preventDefault();
         setError('');
         try {
-            const { isSignedIn } = await confirmSignIn({ challengeResponse: newPassword });
+            const { isSignedIn } = await confirmSignIn({ 
+                challengeResponse: newPassword,
+                options: {
+                    userAttributes: {
+                        name: 'Admin User', // Default for initial admin
+                        phone_number: '+15555555555' // Default dummy, or add input field if strict
+                    }
+                }
+            });
             if (isSignedIn) {
                 localStorage.setItem('user_role', 'super_admin');
                 navigate('/dashboard');

@@ -63,7 +63,8 @@ This guide will help you set up the backend services on AWS and connect them to 
 6.  **User attributes**: Add `name`, `phone_number`.
 7.  **Create app client**:
     - App client name: `DashboardClient`.
-    - Uncheck "Generate client secret" (for frontend use).
+    - **IMPORTANT**: Uncheck **"Generate client secret"**. Frontend apps cannot use client secrets. If you miss this, you will get a `SECRET_HASH` error.
+    - **Authentication Flows**: Ensure **`ALLOW_USER_SRP_AUTH`** is checked. Amplify uses this flow by default.
 8.  **Review and Create**.
 9.  **Users & Groups**:
     - Create a user `admin@admin.com`.

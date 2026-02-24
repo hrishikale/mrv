@@ -43,15 +43,21 @@ This guide will help you set up the backend services on AWS and connect them to 
     - Actions -> Create Resource.
     - Resource Name: `users`.
     - Enable **Enable API Gateway CORS** (Check this!).
-5.  **Create Method**:
+5.  **Create API Method (Users)**:
     - Select `/users` resource.
-    - Actions -> Create Method -> `ANY` (or create GET, POST individually).
+    - Actions -> Create Method -> `ANY` (or GET, POST, PUT, DELETE individually).
     - Integration type: **Lambda Function**.
     - Select your `UserManagementFunction`.
-6.  **Deploy API**:
+6.  **Create API Resource (Roles) - NEW**:
+    - Select root `/`.
+    - Create Resource -> Name: `roles`.
+    - Enable CORS.
+    - Create Method -> `ANY`.
+    - Integration: Same `UserManagementFunction`.
+7.  **Deploy API**:
     - Actions -> Deploy API.
-    - Stage name: `dev`.
-    - **Copy the Invoke URL** (e.g., `https://xyz.execute-api.us-east-1.amazonaws.com/dev`).
+    - Stage: `dev`.
+    - **Note**: If you made changes, you MUST redeploy the API to the stage for them to take effect.
 
 ## Step 4: AWS Cognito (Authentication)
 

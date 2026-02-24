@@ -17,6 +17,9 @@ const Sidebar = () => {
                 <LinkContainer to="/dashboard/setup/users">
                     <Nav.Link className="text-white">Users</Nav.Link>
                 </LinkContainer>
+                <LinkContainer to="/dashboard/setup/roles">
+                    <Nav.Link className="text-white">Roles</Nav.Link>
+                </LinkContainer>
             </Nav>
         </div>
     );
@@ -57,3 +60,4 @@ const DashboardLayout: React.FC = () => {
 };
 
 export default DashboardLayout;
+ 
